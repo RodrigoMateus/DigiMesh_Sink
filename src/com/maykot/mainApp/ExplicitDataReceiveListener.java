@@ -40,7 +40,6 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 		case MainApp.ENDPOINT_HTTP_POST_INIT:
 
 			System.out.println("Post INIT");
-
 			break;
 
 		case MainApp.ENDPOINT_HTTP_POST_DATA:
@@ -80,7 +79,6 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 			} catch (XBeeException e1) {
 				e1.printStackTrace();
 			}
-
 			break;
 
 		case MainApp.ENDPOINT_TXT:
