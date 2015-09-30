@@ -19,6 +19,7 @@ import com.digi.xbee.api.exceptions.TimeoutException;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.listeners.IExplicitDataReceiveListener;
 import com.digi.xbee.api.models.ExplicitXBeeMessage;
+import com.digi.xbee.api.utils.LogRecord;
 import com.maykot.http.ProxyHttp;
 import com.maykot.model.ProxyRequest;
 
@@ -69,6 +70,8 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 			}
 			byteArrayOutputStream.reset();
 			String response = ProxyHttp.postFile(proxyRequest);
+
+			LogRecord.insertLog(new String(proxyRequest.getBody()));
 
 			// Envia a resposta do POST para o dispositivo que enviou a
 			// mensagem original (explicitXBeeMessage)
