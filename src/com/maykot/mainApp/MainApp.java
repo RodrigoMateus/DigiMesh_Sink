@@ -27,7 +27,7 @@ public class MainApp {
 	static final int ENDPOINT_HTTP_POST_SEND = 33;
 	static final int CLUSTER_ID = 1;
 	static final int PROFILE_ID = 1;
-	
+
 	public static void main(String[] args) {
 		System.out.println(" +-----------------+");
 		System.out.println(" |  DigiMesh Sink  |");
