@@ -6,7 +6,6 @@ import com.digi.xbee.api.DigiMeshDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.models.APIOutputMode;
 import com.digi.xbee.api.utils.DeviceConfig;
-import com.digi.xbee.api.utils.LogRecord;
 import com.digi.xbee.api.utils.Statistic;
 
 public class MainApp {
@@ -42,14 +41,17 @@ public class MainApp {
 
 		} catch (IOException e1) {
 			e1.printStackTrace();
+		} catch (Exception e) {
 		}
 
-		new LogRecord();
 		new Statistic();
 
-		myDevice = new DigiMeshDevice(XTEND_PORT, XTEND_BAUD_RATE);
+		openDevice();
+	}
 
+	private static void openDevice() {
 		try {
+			myDevice = new DigiMeshDevice(XTEND_PORT, XTEND_BAUD_RATE);
 			myDevice.open();
 			myDevice.setAPIOutputMode(APIOutputMode.MODE_EXPLICIT);
 			myDevice.addExplicitDataListener(new ExplicitDataReceiveListener());
@@ -57,8 +59,12 @@ public class MainApp {
 			System.out.println("\n>> Waiting for data in explicit format...");
 
 		} catch (XBeeException e) {
+			myDevice.close();
 			e.printStackTrace();
-			System.exit(1);
+			openDevice();
+		} catch (Exception e) {
+			System.out.println("Teste2");
+
 		}
 	}
 }

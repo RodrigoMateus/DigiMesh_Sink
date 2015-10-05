@@ -11,16 +11,19 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import com.maykot.model.ProxyRequest;
+import br.com.jacto.otmisnet.mqtt.ProxyRequest;
+import br.com.jacto.otmisnet.mqtt.ProxyResponse;
 
 public class ProxyHttp {
 
-	public static String postFile(ProxyRequest proxyRequest) {
+	public static ProxyResponse postFile(ProxyRequest proxyRequest) {
+
+		ProxyResponse proxyResponse = null;
 
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		CloseableHttpResponse httpResponse = null;
 		String response = null;
-
+		System.out.println(proxyRequest.toString());
 		try {
 			HttpPost request = new HttpPost(proxyRequest.getUrl());
 			request.addHeader("content-type", proxyRequest.getContentType());
@@ -33,11 +36,13 @@ public class ProxyHttp {
 
 			// Faz alguma coisa com a resposta
 			response = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
-			System.out.println(response);
+
+			proxyResponse = new ProxyResponse(httpResponse.getStatusLine().getStatusCode(), "", response.getBytes());
+			System.out.println(proxyResponse.toString());
 
 		} catch (IOException ex) {
 			System.out.println("ERRO Proxy");
 		}
-		return response;
+		return proxyResponse;
 	}
 }
