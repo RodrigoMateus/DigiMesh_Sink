@@ -61,9 +61,9 @@ public class MainApp {
 		} catch (XBeeException e) {
 			myDevice.close();
 			e.printStackTrace();
-			openDevice();
+			// openDevice();
 		} catch (Exception e) {
-			System.out.println("Teste2");
+			System.out.println("Exception on openDevice()");
 
 		}
 	}
