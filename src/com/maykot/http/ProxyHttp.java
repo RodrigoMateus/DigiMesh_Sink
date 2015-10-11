@@ -11,8 +11,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import br.com.jacto.otmisnet.mqtt.ProxyRequest;
-import br.com.jacto.otmisnet.mqtt.ProxyResponse;
+import com.maykot.maykottracker.models.ProxyRequest;
+import com.maykot.maykottracker.models.ProxyResponse;
 
 public class ProxyHttp {
 

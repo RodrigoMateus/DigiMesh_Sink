@@ -21,9 +21,8 @@ import com.digi.xbee.api.listeners.IExplicitDataReceiveListener;
 import com.digi.xbee.api.models.ExplicitXBeeMessage;
 import com.digi.xbee.api.utils.LogRecord;
 import com.maykot.http.ProxyHttp;
-
-import br.com.jacto.otmisnet.mqtt.ProxyRequest;
-import br.com.jacto.otmisnet.mqtt.ProxyResponse;
+import com.maykot.maykottracker.models.ProxyRequest;
+import com.maykot.maykottracker.models.ProxyResponse;
 
 public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener {
 

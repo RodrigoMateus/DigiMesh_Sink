@@ -14,3 +14,7 @@
 {"accuracy":1,"createdAt":"Oct 6, 2015 12:30:22 PM","latitude":-48.2222,"longitude":0.0,"speed":6,"uploaded":true}
 {"accuracy":1,"createdAt":"Oct 6, 2015 12:30:22 PM","latitude":-48.2222,"longitude":0.0,"speed":10,"uploaded":true}
 {"accuracy":33,"createdAt":"Oct 6, 2015 12:31:21 PM","latitude":-22.1962421,"longitude":-49.9309281,"speed":0,"uploaded":false}
+{"accuracy":11,"createdAt":"Oct 11, 2015 5:04:38 PM","latitude":-48.2222,"longitude":0.0,"msg":"MensagemTeste","speed":15,"uploaded":true}
+{"accuracy":40,"createdAt":"Oct 11, 2015 5:04:54 PM","latitude":-22.1962424,"longitude":-49.93093,"speed":0,"uploaded":false}
+{"accuracy":16,"createdAt":"Oct 11, 2015 5:05:12 PM","latitude":-48.2222,"longitude":0.0,"msg":"hello","speed":1,"uploaded":true}
+{"accuracy":36,"createdAt":"Oct 11, 2015 5:05:14 PM","latitude":-22.1962423,"longitude":-49.9309293,"speed":0,"uploaded":false}

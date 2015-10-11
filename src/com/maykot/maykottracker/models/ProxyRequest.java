@@ -1,4 +1,4 @@
-package br.com.jacto.otmisnet.mqtt;
+package com.maykot.maykottracker.models;
 
 import java.io.Serializable;
 
