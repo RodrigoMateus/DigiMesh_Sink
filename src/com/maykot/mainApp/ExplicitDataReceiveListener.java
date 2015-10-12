@@ -17,6 +17,8 @@ import java.util.concurrent.Executors;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
+import com.digi.xbee.api.exceptions.TimeoutException;
+import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.listeners.IExplicitDataReceiveListener;
 import com.digi.xbee.api.models.ExplicitXBeeMessage;
 import com.digi.xbee.api.utils.LogRecord;
@@ -95,14 +97,14 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 
 				// Envia a resposta do POST para o dispositivo que enviou a
 				// mensagem original (explicitXBeeMessage)
-				// try {
-				// MainApp.myDevice.sendData(explicitXBeeMessage.getDevice().get64BitAddress(),
-				// response.toSerialize());
-				// } catch (TimeoutException e1) {
-				// e1.printStackTrace();
-				// } catch (XBeeException e1) {
-				// e1.printStackTrace();
-				// }
+				try {
+					MainApp.myDevice.sendData(explicitXBeeMessage.getDevice().get64BitAddress(),
+							response.toSerialize());
+				} catch (TimeoutException e1) {
+					e1.printStackTrace();
+				} catch (XBeeException e1) {
+					e1.printStackTrace();
+				}
 				break;
 
 			case MainApp.ENDPOINT_TXT:
