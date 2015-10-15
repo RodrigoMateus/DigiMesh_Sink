@@ -23,7 +23,7 @@ public class ProxyHttp {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		CloseableHttpResponse httpResponse = null;
 		String response = null;
-		System.out.println(proxyRequest.toString());
+		//System.out.println(proxyRequest.toString());
 		try {
 			HttpPost request = new HttpPost(proxyRequest.getUrl());
 			request.addHeader("content-type", proxyRequest.getContentType());

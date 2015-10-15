@@ -1,10 +1,7 @@
 package com.maykot.mainApp;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.ExecutorService;
@@ -23,8 +20,6 @@ import com.maykot.http.ProxyHttp;
 import com.maykot.maykottracker.models.ProxyRequest;
 import com.maykot.maykottracker.models.ProxyResponse;
 
-import sun.applet.Main;
-
 public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener {
 
 	CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -37,15 +32,15 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 	@Override
 	public void explicitDataReceived(ExplicitXBeeMessage explicitXBeeMessage) {
 		ExecutorService executor = Executors.newFixedThreadPool(20);
-		executor.execute(new TrataRequisao(explicitXBeeMessage));
+		executor.execute(new TreatRequest(explicitXBeeMessage));
 		executor.shutdown();
 	}
 
-	class TrataRequisao extends Thread {
+	class TreatRequest extends Thread {
 
 		ExplicitXBeeMessage explicitXBeeMessage;
 
-		public TrataRequisao(ExplicitXBeeMessage explicitXBeeMessage) {
+		public TreatRequest(ExplicitXBeeMessage explicitXBeeMessage) {
 			this.explicitXBeeMessage = explicitXBeeMessage;
 		}
 
@@ -56,7 +51,7 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 
 			case MainApp.ENDPOINT_HTTP_POST_INIT:
 
-				mqttClientId = explicitXBeeMessage.getData().toString();
+				mqttClientId = new String(explicitXBeeMessage.getData());
 				System.out.println("MQTT Client ID = " + mqttClientId);
 				break;
 
@@ -73,19 +68,21 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 
 				byte[] tempByteArray = byteArrayOutputStream.toByteArray();
 
-				ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(tempByteArray);
-				ObjectInput objectInput = null;
-				ProxyRequest proxyRequest = null;
-
-				try {
-					objectInput = new ObjectInputStream(byteArrayInputStream);
-					proxyRequest = (ProxyRequest) objectInput.readObject();
-				} catch (ClassNotFoundException e2) {
-					e2.printStackTrace();
-				} catch (IOException e2) {
-					e2.printStackTrace();
-				}
+//				ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(tempByteArray);
+//				ObjectInput objectInput = null;
+//				ProxyRequest proxyRequest = null;
+//
+//				try {
+//					objectInput = new ObjectInputStream(byteArrayInputStream);
+//					proxyRequest = (ProxyRequest) objectInput.readObject();
+//				} catch (ClassNotFoundException e2) {
+//					e2.printStackTrace();
+//				} catch (IOException e2) {
+//					e2.printStackTrace();
+//				}
 				byteArrayOutputStream.reset();
+				
+				ProxyRequest proxyRequest = (ProxyRequest) SerializationUtils.deserialize(tempByteArray);
 
 				ProxyResponse response = ProxyHttp.postFile(proxyRequest);
 				response.setMqttClientId(mqttClientId);

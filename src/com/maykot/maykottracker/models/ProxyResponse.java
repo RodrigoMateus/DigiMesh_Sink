@@ -1,7 +1,6 @@
 package com.maykot.maykottracker.models;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 public class ProxyResponse implements Serializable {
 
@@ -41,6 +40,6 @@ public class ProxyResponse implements Serializable {
 	@Override
 	public String toString() {
 		return "ProxyResponse [statusCode=" + statusCode + ", contentType=" + contentType + ", mqttClientId="
-				+ mqttClientId + ", body=" + Arrays.toString(body) + "]";
+				+ mqttClientId + ", body=" +  new String(body) + "]";
 	}
 }
