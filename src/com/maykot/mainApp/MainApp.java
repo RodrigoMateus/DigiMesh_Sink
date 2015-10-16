@@ -1,5 +1,9 @@
 package com.maykot.mainApp;
 
+/*****************
+ * DigiMesh Sink *
+ *****************/
+
 import java.io.IOException;
 
 import com.digi.xbee.api.DigiMeshDevice;
@@ -14,16 +18,13 @@ public class MainApp {
 	static DigiMeshDevice myDevice;
 	static String XTEND_PORT = null;
 	static int XTEND_BAUD_RATE;
-	static String REMOTE_NODE_IDENTIFIER = null;
 
 	/* Endpoints, clusterID and profileID */
 	static final int ENDPOINT_TXT = 11;
-	static final int ENDPOINT_FILENEW = 21;
-	static final int ENDPOINT_FILEDATA = 22;
-	static final int ENDPOINT_FILECLOSE = 23;
 	static final int ENDPOINT_HTTP_POST_INIT = 31;
 	static final int ENDPOINT_HTTP_POST_DATA = 32;
 	static final int ENDPOINT_HTTP_POST_SEND = 33;
+	static final int ENDPOINT_HTTP_RESPONSE = 41;
 	static final int CLUSTER_ID = 1;
 	static final int PROFILE_ID = 1;
 
@@ -37,7 +38,6 @@ public class MainApp {
 
 			XTEND_PORT = deviceConfig.getXTendPort();
 			XTEND_BAUD_RATE = deviceConfig.getXTendBaudRate();
-			REMOTE_NODE_IDENTIFIER = deviceConfig.getRemoteNodeID();
 
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -61,7 +61,6 @@ public class MainApp {
 		} catch (XBeeException e) {
 			myDevice.close();
 			e.printStackTrace();
-			//openDevice();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
