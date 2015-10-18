@@ -1,6 +1,7 @@
-package com.maykot.maykottracker.models;
+package com.maykot.maykottracker.radio;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class ProxyResponse implements Serializable {
 
@@ -8,15 +9,24 @@ public class ProxyResponse implements Serializable {
 	private int statusCode;
 	private String contentType;
 	private String mqttClientId;
+	private String idMessage;
 	private byte[] body;
-
+	
 	public ProxyResponse(int statusCode, String contentType, byte[] body) {
 		super();
 		this.statusCode = statusCode;
 		this.contentType = contentType;
 		this.body = body;
 	}
+	
+	public String getIdMessage() {
+		return idMessage;
+	}
 
+	public void setIdMessage(String idMessage) {
+		this.idMessage = idMessage;
+	}
+	
 	public int getStatusCode() {
 		return statusCode;
 	}
@@ -40,6 +50,6 @@ public class ProxyResponse implements Serializable {
 	@Override
 	public String toString() {
 		return "ProxyResponse [statusCode=" + statusCode + ", contentType=" + contentType + ", mqttClientId="
-				+ mqttClientId + ", body=" + new String(body) + "]";
+				+ mqttClientId + ", body=" + Arrays.toString(body) + "]";
 	}
 }

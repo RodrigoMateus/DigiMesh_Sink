@@ -15,10 +15,9 @@ import com.digi.xbee.api.exceptions.TimeoutException;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.listeners.IExplicitDataReceiveListener;
 import com.digi.xbee.api.models.ExplicitXBeeMessage;
-import com.digi.xbee.api.utils.LogRecord;
 import com.maykot.http.ProxyHttp;
-import com.maykot.maykottracker.models.ProxyRequest;
-import com.maykot.maykottracker.models.ProxyResponse;
+import com.maykot.maykottracker.radio.ProxyRequest;
+import com.maykot.maykottracker.radio.ProxyResponse;
 
 public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener {
 
@@ -85,16 +84,18 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 
 				ProxyRequest proxyRequest = (ProxyRequest) SerializationUtils.deserialize(tempByteArray);
 
-				ProxyResponse response = ProxyHttp.postFile(proxyRequest);
-				response.setMqttClientId(mqttClientId);
+				ProxyResponse response = null;
+
+				if (proxyRequest.getVerb().contains("get")) {
+					response = ProxyHttp.getFile(proxyRequest);
+					response.setMqttClientId(mqttClientId);
+				} else {
+					response = ProxyHttp.postFile(proxyRequest);
+					response.setMqttClientId(mqttClientId);
+				}
 
 				byte[] responseToSourceDevice = SerializationUtils.serialize(response);
-
-				if (proxyRequest.getUrl().contentEquals("http://localhost:8000"))
-					LogRecord.insertLog("localhost", new String(proxyRequest.getBody()));
-				else
-					LogRecord.insertLog("otmisnet", new String(proxyRequest.getBody()));
-
+			
 				// Envia a resposta do POST para o dispositivo que enviou a
 				// mensagem original (explicitXBeeMessage)
 				try {
