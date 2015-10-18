@@ -11,8 +11,6 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
-import com.digi.xbee.api.exceptions.TimeoutException;
-import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.listeners.IExplicitDataReceiveListener;
 import com.digi.xbee.api.models.ExplicitXBeeMessage;
 import com.maykot.http.ProxyHttp;
@@ -66,24 +64,9 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 			case MainApp.ENDPOINT_HTTP_POST_SEND:
 
 				byte[] tempByteArray = byteArrayOutputStream.toByteArray();
-
-				// ByteArrayInputStream byteArrayInputStream = new
-				// ByteArrayInputStream(tempByteArray);
-				// ObjectInput objectInput = null;
-				// ProxyRequest proxyRequest = null;
-				//
-				// try {
-				// objectInput = new ObjectInputStream(byteArrayInputStream);
-				// proxyRequest = (ProxyRequest) objectInput.readObject();
-				// } catch (ClassNotFoundException e2) {
-				// e2.printStackTrace();
-				// } catch (IOException e2) {
-				// e2.printStackTrace();
-				// }
 				byteArrayOutputStream.reset();
 
 				ProxyRequest proxyRequest = (ProxyRequest) SerializationUtils.deserialize(tempByteArray);
-
 				ProxyResponse response = null;
 
 				if (proxyRequest.getVerb().contains("get")) {
@@ -95,18 +78,15 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 				}
 
 				byte[] responseToSourceDevice = SerializationUtils.serialize(response);
-			
-				// Envia a resposta do POST para o dispositivo que enviou a
-				// mensagem original (explicitXBeeMessage)
-				try {
-					MainApp.myDevice.sendExplicitData(explicitXBeeMessage.getDevice().get64BitAddress(),
-							MainApp.ENDPOINT_HTTP_RESPONSE, MainApp.ENDPOINT_HTTP_RESPONSE, MainApp.CLUSTER_ID,
-							MainApp.PROFILE_ID, responseToSourceDevice);
-				} catch (TimeoutException e1) {
-					e1.printStackTrace();
-				} catch (XBeeException e1) {
-					e1.printStackTrace();
-				}
+				byte[] mqttClientIdToBytes = mqttClientId.getBytes();
+				byte[] noMessage = new String("noMessage").getBytes();
+
+				SendResponseMessage.send(MainApp.myDevice, mqttClientIdToBytes, MainApp.ENDPOINT_RESPONSE_INIT,
+						explicitXBeeMessage.getDevice().get64BitAddress());
+				SendResponseMessage.send(MainApp.myDevice, responseToSourceDevice, MainApp.ENDPOINT_RESPONSE_DATA,
+						explicitXBeeMessage.getDevice().get64BitAddress());
+				SendResponseMessage.send(MainApp.myDevice, noMessage, MainApp.ENDPOINT_RESPONSE_SEND,
+						explicitXBeeMessage.getDevice().get64BitAddress());
 				break;
 
 			case MainApp.ENDPOINT_TXT:

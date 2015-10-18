@@ -57,3 +57,4 @@ hs_err_pid*
 
 bin/.gitignore
 /localhost.txt
+/log.txt
