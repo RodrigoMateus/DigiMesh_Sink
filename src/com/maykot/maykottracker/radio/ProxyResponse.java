@@ -12,48 +12,32 @@ public class ProxyResponse implements Serializable {
 	private String mqttClientId;
 	private String idMessage;
 	private byte[] body;
-	
+
 	public ProxyResponse(int statusCode, String contentType, byte[] body) {
 		super();
 		this.statusCode = statusCode;
 		this.body = body;
 	}
-	
-	public String getIdMessage() {
-		return idMessage;
-	}
 
-	public void setIdMessage(String idMessage) {
-		this.idMessage = idMessage;
-	}
-	
-	public int getStatusCode() {
-		return statusCode;
-	}
+	public int getStatusCode() { return statusCode; }
 
-	public byte[] getBody() {
-		return body;
-	}
+	public HashMap<String, String> getHeader() { return header; }
 
-	public String getMqttClientId() {
-		return mqttClientId;
-	}
+	public void setHeader(HashMap<String, String> header) { this.header = header; }
 
-	public void setMqttClientId(String mqttClientId) {
-		this.mqttClientId = mqttClientId;
-	}
-	
-	public HashMap<String, String> getHeader() {
-		return header;
-	}
+	public String getMqttClientId() { return mqttClientId; }
 
-	public void setHeader(HashMap<String, String> header) {
-		this.header = header;
-	}
+	public void setMqttClientId(String mqttClientId) { this.mqttClientId = mqttClientId; }
+
+	public String getIdMessage() { return idMessage; }
+
+	public void setIdMessage(String idMessage) { this.idMessage = idMessage; }
+
+	public byte[] getBody() { return body; }
 
 	@Override
 	public String toString() {
-		return "ProxyResponse [statusCode=" + statusCode + ", mqttClientId="
-				+ mqttClientId + ", body=" + Arrays.toString(body) + "]";
+		return "ProxyResponse [statusCode=" + statusCode + ", mqttClientId=" + mqttClientId + ", body="
+				+ Arrays.toString(body) + "]";
 	}
 }
