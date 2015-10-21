@@ -2,15 +2,11 @@ package com.maykot.mainApp;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-
 import com.digi.xbee.api.listeners.IExplicitDataReceiveListener;
 import com.digi.xbee.api.models.ExplicitXBeeMessage;
 import com.maykot.http.ProxyHttp;
@@ -20,11 +16,6 @@ import com.maykot.maykottracker.radio.ProxyResponse;
 public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener {
 
 	CloseableHttpClient httpClient = HttpClients.createDefault();
-	ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-	FileChannel fileChannel;
-	ByteBuffer buffer;
-	boolean fileExist = false;
-	String mqttClientId;
 
 	@Override
 	public void explicitDataReceived(ExplicitXBeeMessage explicitXBeeMessage) {
@@ -43,7 +34,11 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 
 		@Override
 		public void run() {
+			String mqttClientId = null;
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
 			int endPoint = explicitXBeeMessage.getDestinationEndpoint();
+
 			switch (endPoint) {
 
 			case MainApp.ENDPOINT_HTTP_POST_INIT:
@@ -66,16 +61,7 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 				byte[] tempByteArray = byteArrayOutputStream.toByteArray();
 				byteArrayOutputStream.reset();
 
-				ProxyRequest proxyRequest = (ProxyRequest) SerializationUtils.deserialize(tempByteArray);
-				ProxyResponse response = null;
-
-				if (proxyRequest.getVerb().contains("get")) {
-					response = ProxyHttp.getFile(proxyRequest);
-					response.setMqttClientId(mqttClientId);
-				} else {
-					response = ProxyHttp.postFile(proxyRequest);
-					response.setMqttClientId(mqttClientId);
-				}
+				ProxyResponse response = processRequest(tempByteArray, mqttClientId);
 
 				byte[] responseToSourceDevice = SerializationUtils.serialize(response);
 				byte[] mqttClientIdToBytes = mqttClientId.getBytes();
@@ -98,6 +84,40 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 			default:
 				break;
 			}
+		}
+
+		private ProxyResponse processRequest(byte[] tempByteArray, String mqttClientId) {
+			ProxyResponse response = null;
+
+			try{
+				ProxyRequest proxyRequest = (ProxyRequest) SerializationUtils.deserialize(tempByteArray);
+
+				try{
+					if (proxyRequest.getVerb().contains("get")) {
+						response = ProxyHttp.getFile(proxyRequest);
+					} else if (proxyRequest.getVerb().contains("post"))  {
+						response = ProxyHttp.postFile(proxyRequest);
+					}else{
+						response = new ProxyResponse(600, "application/json", 
+								new String("{exception:verb invalid}").getBytes());
+					}
+				}catch (Exception e) {
+					response = new ProxyResponse(601, "application/json", 
+							new String("{exception:not verb}").getBytes());
+				}
+			}catch (Exception e) {
+				response = new ProxyResponse(602, "application/json", 
+						new String("{exception:proxy request invalid, message:"+e.getMessage()+"}").getBytes());
+			}
+			
+			if(response == null){
+				response = new ProxyResponse(603, "application/json", 
+						new String("{exception:request problem}").getBytes());
+		
+			}
+			response.setMqttClientId(mqttClientId);
+
+			return response;
 		}
 	}
 }
