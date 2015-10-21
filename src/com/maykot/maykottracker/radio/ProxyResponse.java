@@ -2,12 +2,13 @@ package com.maykot.maykottracker.radio;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class ProxyResponse implements Serializable {
 
 	private static final long serialVersionUID = -5387268491251047957L;
 	private int statusCode;
-	private String contentType;
+	private HashMap<String, String> header;
 	private String mqttClientId;
 	private String idMessage;
 	private byte[] body;
@@ -15,7 +16,6 @@ public class ProxyResponse implements Serializable {
 	public ProxyResponse(int statusCode, String contentType, byte[] body) {
 		super();
 		this.statusCode = statusCode;
-		this.contentType = contentType;
 		this.body = body;
 	}
 	
@@ -31,10 +31,6 @@ public class ProxyResponse implements Serializable {
 		return statusCode;
 	}
 
-	public String getContentType() {
-		return contentType;
-	}
-
 	public byte[] getBody() {
 		return body;
 	}
@@ -46,10 +42,18 @@ public class ProxyResponse implements Serializable {
 	public void setMqttClientId(String mqttClientId) {
 		this.mqttClientId = mqttClientId;
 	}
+	
+	public HashMap<String, String> getHeader() {
+		return header;
+	}
+
+	public void setHeader(HashMap<String, String> header) {
+		this.header = header;
+	}
 
 	@Override
 	public String toString() {
-		return "ProxyResponse [statusCode=" + statusCode + ", contentType=" + contentType + ", mqttClientId="
+		return "ProxyResponse [statusCode=" + statusCode + ", mqttClientId="
 				+ mqttClientId + ", body=" + Arrays.toString(body) + "]";
 	}
 }
