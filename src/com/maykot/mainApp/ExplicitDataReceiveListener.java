@@ -16,6 +16,8 @@ import com.maykot.maykottracker.radio.ProxyResponse;
 public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener {
 
 	CloseableHttpClient httpClient = HttpClients.createDefault();
+	String mqttClientId = null;
+
 
 	@Override
 	public void explicitDataReceived(ExplicitXBeeMessage explicitXBeeMessage) {
@@ -34,7 +36,6 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 
 		@Override
 		public void run() {
-			String mqttClientId = null;
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
 			int endPoint = explicitXBeeMessage.getDestinationEndpoint();
