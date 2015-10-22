@@ -54,11 +54,12 @@ public class MainApp {
 
 		openDevice();
 	}
-
+	
 	private static void openDevice() {
 		try {
 			myDevice = new DigiMeshDevice(XTEND_PORT, XTEND_BAUD_RATE);
 			myDevice.open();
+			myDevice.addModemStatusListener(new ModemStatusReceiveListener() );
 			myDevice.setAPIOutputMode(APIOutputMode.MODE_EXPLICIT);
 			myDevice.addExplicitDataListener(new ExplicitDataReceiveListener());
 
