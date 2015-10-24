@@ -1,15 +1,11 @@
 package com.mykot.test;
 
-import static org.junit.Assert.*;
-
 import java.util.HashMap;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import com.maykot.http.ProxyHttp;
-import com.maykot.mainApp.ExplicitDataReceiveListener;
 import com.maykot.maykottracker.radio.ProxyRequest;
 import com.maykot.maykottracker.radio.ProxyResponse;
 

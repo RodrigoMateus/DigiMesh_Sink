@@ -17,6 +17,7 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 
 	CloseableHttpClient httpClient = HttpClients.createDefault();
 	String mqttClientId = null;
+	String mqttMessageId = null;
 
 
 	@Override
@@ -92,6 +93,7 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 
 			try{
 				ProxyRequest proxyRequest = (ProxyRequest) SerializationUtils.deserialize(tempByteArray);
+				mqttMessageId = proxyRequest.getIdMessage();
 
 				try{
 					if (proxyRequest.getVerb().contains("get")) {
@@ -116,8 +118,9 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 						new String("{exception:request problem}").getBytes());
 		
 			}
+			System.out.println("MQTT Message ID = " + mqttMessageId);
 			response.setMqttClientId(mqttClientId);
-
+			response.setIdMessage(mqttMessageId);
 			return response;
 		}
 	}
