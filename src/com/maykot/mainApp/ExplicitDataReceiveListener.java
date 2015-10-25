@@ -16,9 +16,9 @@ import com.maykot.maykottracker.radio.ProxyResponse;
 public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener {
 
 	CloseableHttpClient httpClient = HttpClients.createDefault();
+	ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 	String mqttClientId = null;
 	String mqttMessageId = null;
-
 
 	@Override
 	public void explicitDataReceived(ExplicitXBeeMessage explicitXBeeMessage) {
@@ -37,7 +37,6 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 
 		@Override
 		public void run() {
-			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
 			int endPoint = explicitXBeeMessage.getDestinationEndpoint();
 
@@ -91,32 +90,32 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 		private ProxyResponse processRequest(byte[] tempByteArray, String mqttClientId) {
 			ProxyResponse response = null;
 
-			try{
+			try {
 				ProxyRequest proxyRequest = (ProxyRequest) SerializationUtils.deserialize(tempByteArray);
 				mqttMessageId = proxyRequest.getIdMessage();
 
-				try{
+				try {
 					if (proxyRequest.getVerb().contains("get")) {
 						response = ProxyHttp.getFile(proxyRequest);
-					} else if (proxyRequest.getVerb().contains("post"))  {
+					} else if (proxyRequest.getVerb().contains("post")) {
 						response = ProxyHttp.postFile(proxyRequest);
-					}else{
-						response = new ProxyResponse(600, "application/json", 
+					} else {
+						response = new ProxyResponse(600, "application/json",
 								new String("{exception:verb invalid}").getBytes());
 					}
-				}catch (Exception e) {
-					response = new ProxyResponse(601, "application/json", 
+				} catch (Exception e) {
+					response = new ProxyResponse(601, "application/json",
 							new String("{exception:not verb}").getBytes());
 				}
-			}catch (Exception e) {
-				response = new ProxyResponse(602, "application/json", 
-						new String("{exception:proxy request invalid, message:"+e.getMessage()+"}").getBytes());
+			} catch (Exception e) {
+				response = new ProxyResponse(602, "application/json",
+						new String("{exception:proxy request invalid, message:" + e.getMessage() + "}").getBytes());
 			}
-			
-			if(response == null){
-				response = new ProxyResponse(603, "application/json", 
+
+			if (response == null) {
+				response = new ProxyResponse(603, "application/json",
 						new String("{exception:request problem}").getBytes());
-		
+
 			}
 			System.out.println("MQTT Message ID = " + mqttMessageId);
 			response.setMqttClientId(mqttClientId);
