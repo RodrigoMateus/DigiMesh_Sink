@@ -8,7 +8,9 @@ import java.io.IOException;
 
 import com.digi.xbee.api.DigiMeshDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
+import com.digi.xbee.api.listeners.IModemStatusReceiveListener;
 import com.digi.xbee.api.models.APIOutputMode;
+import com.digi.xbee.api.models.ModemStatusEvent;
 import com.digi.xbee.api.utils.DeviceConfig;
 import com.digi.xbee.api.utils.Statistic;
 
@@ -53,21 +55,23 @@ public class MainApp {
 		new Statistic();
 
 		openDevice();
+		
+		new XTendMonitor().run();
 	}
-	
-	private static void openDevice() {
+
+	public static void openDevice() {
 		try {
 			myDevice = new DigiMeshDevice(XTEND_PORT, XTEND_BAUD_RATE);
 			myDevice.open();
-			myDevice.addModemStatusListener(new ModemStatusReceiveListener() );
+			myDevice.addModemStatusListener(new ModemStatusReceiveListener());
 			myDevice.setAPIOutputMode(APIOutputMode.MODE_EXPLICIT);
 			myDevice.addExplicitDataListener(new ExplicitDataReceiveListener());
-
 			System.out.println("\n>> Waiting for data in explicit format...");
-
+		
 		} catch (XBeeException e) {
 			myDevice.close();
 			e.printStackTrace();
+			System.out.println(e.getMessage());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}

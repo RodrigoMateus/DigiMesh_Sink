@@ -10,6 +10,7 @@ import org.apache.http.impl.client.HttpClients;
 import com.digi.xbee.api.listeners.IExplicitDataReceiveListener;
 import com.digi.xbee.api.models.ExplicitXBeeMessage;
 import com.maykot.http.ProxyHttp;
+import com.maykot.maykottracker.radio.ErrorCode;
 import com.maykot.maykottracker.radio.ProxyRequest;
 import com.maykot.maykottracker.radio.ProxyResponse;
 
@@ -101,20 +102,20 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 						response = ProxyHttp.postFile(proxyRequest);
 					} else {
 						response = new ProxyResponse(600, "application/json",
-								new String("{exception:verb invalid}").getBytes());
+								ErrorCode.e600.getBytes());
 					}
 				} catch (Exception e) {
 					response = new ProxyResponse(601, "application/json",
-							new String("{exception:not verb}").getBytes());
+							ErrorCode.e601.getBytes());
 				}
 			} catch (Exception e) {
 				response = new ProxyResponse(602, "application/json",
-						new String("{exception:proxy request invalid, message:" + e.getMessage() + "}").getBytes());
+						new String(ErrorCode.e602 + e.getMessage() + "}").getBytes());
 			}
 
 			if (response == null) {
 				response = new ProxyResponse(603, "application/json",
-						new String("{exception:request problem}").getBytes());
+						ErrorCode.e603.getBytes());
 
 			}
 			System.out.println("MQTT Message ID = " + mqttMessageId);
