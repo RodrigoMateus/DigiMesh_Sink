@@ -6,8 +6,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.maykot.http.ProxyHttp;
-import com.maykot.maykottracker.radio.ProxyRequest;
-import com.maykot.maykottracker.radio.ProxyResponse;
+import com.maykot.radiolibrary.ProxyRequest;
+import com.maykot.radiolibrary.ProxyResponse;
 
 public class TestHttp {
 
