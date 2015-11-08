@@ -14,18 +14,14 @@ public class XTendMonitor extends Thread {
 
 		while (true) {
 			try {
+				Thread.sleep(5000);
 				MainApp.myDevice.getPowerLevel().getValue();
+				System.out.println("OK!");
 			} catch (TimeoutException e1) {
 			} catch (Exception e1) {
 				System.out.println("Reset");
+				MainApp.myDevice.close();
 				MainApp.openDevice();
-			}
-
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
 	}

@@ -54,12 +54,6 @@ public class ProxyHttp {
 		} catch (IOException ex) {
 			System.out.println("ERRO Proxy");
 		}
-
-		if (proxyRequest.getUrl().contentEquals("http://localhost:8000"))
-			LogRecord.insertLog("localhost", new String(proxyRequest.getBody()));
-		else
-			LogRecord.insertLog("otmisnet", new String(proxyRequest.getBody()));
-
 		return proxyResponse;
 	}
 

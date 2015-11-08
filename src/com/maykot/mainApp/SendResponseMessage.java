@@ -28,9 +28,6 @@ public class SendResponseMessage {
 
 				myDevice.sendExplicitData(sourceDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID, MainApp.PROFILE_ID,
 						responseToSourceDevice);
-				LogRecord.insertLog("log",
-						new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))
-								+ " : Inicio HTTP RESPONSE");
 				break;
 
 			case MainApp.ENDPOINT_RESPONSE_DATA:
@@ -57,12 +54,9 @@ public class SendResponseMessage {
 			case MainApp.ENDPOINT_RESPONSE_SEND:
 				myDevice.sendExplicitData(sourceDevice, ENDPOINT, ENDPOINT, MainApp.CLUSTER_ID, MainApp.PROFILE_ID,
 						responseToSourceDevice);
-				LogRecord.insertLog("log",
-						(new String(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))) + " : END Response");
 				break;
 			}
 		} catch (TimeoutException e) {
-			LogRecord.insertLog("log", new String("TimeOut ERROR"));
 			System.out.println("TimeOut ERROR");
 		} catch (XBeeException e) {
 			Statistic.incrementCountBadPack();

@@ -9,6 +9,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import com.digi.xbee.api.listeners.IExplicitDataReceiveListener;
 import com.digi.xbee.api.models.ExplicitXBeeMessage;
+import com.digi.xbee.api.utils.LogRecord;
 import com.maykot.http.ProxyHttp;
 import com.maykot.radiolibrary.ErrorCode;
 import com.maykot.radiolibrary.ProxyRequest;
@@ -100,6 +101,11 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 						response = ProxyHttp.getFile(proxyRequest);
 					} else if (proxyRequest.getVerb().contains("post")) {
 						response = ProxyHttp.postFile(proxyRequest);
+						
+						if (proxyRequest.getUrl().contentEquals("http://localhost:8000"))
+							LogRecord.insertLog("ProxyRequest_LocalHost", new String(proxyRequest.getBody()));
+						else
+							LogRecord.insertLog("ProxyRequest_Otmisnet", new String(proxyRequest.getBody()));
 					} else {
 						response = new ProxyResponse(600, "application/json",
 								ErrorCode.e600.getBytes());
