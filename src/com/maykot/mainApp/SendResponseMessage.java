@@ -1,14 +1,11 @@
 package com.maykot.mainApp;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 
 import com.digi.xbee.api.DigiMeshDevice;
 import com.digi.xbee.api.exceptions.TimeoutException;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.models.XBee64BitAddress;
-import com.digi.xbee.api.utils.LogRecord;
 import com.digi.xbee.api.utils.Statistic;
 
 public class SendResponseMessage {

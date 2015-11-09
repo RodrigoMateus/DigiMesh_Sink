@@ -16,7 +16,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import com.digi.xbee.api.utils.LogRecord;
 import com.maykot.radiolibrary.ProxyRequest;
 import com.maykot.radiolibrary.ProxyResponse;
 
@@ -33,9 +32,9 @@ public class ProxyHttp {
 
 		try {
 			HttpPost request = new HttpPost(proxyRequest.getUrl());
-			
+
 			setHeader(proxyRequest, request);
-			
+
 			InputStream inputStream = new ByteArrayInputStream(proxyRequest.getBody());
 			InputStreamEntity inputStreamEntity = new InputStreamEntity(inputStream, -1);
 			request.setEntity(inputStreamEntity);
@@ -48,7 +47,7 @@ public class ProxyHttp {
 			proxyResponse = new ProxyResponse(httpResponse.getStatusLine().getStatusCode(), "", response.getBytes());
 			proxyResponse.setIdMessage(proxyRequest.getIdMessage());
 			getHeader(proxyResponse, httpResponse);
-			
+
 			System.out.println(proxyResponse.toString());
 
 		} catch (IOException ex) {
@@ -58,18 +57,18 @@ public class ProxyHttp {
 	}
 
 	private static void setHeader(ProxyRequest proxyRequest, HttpRequestBase request) {
-		try{
-			for(String key : proxyRequest.getHeader().keySet())
+		try {
+			for (String key : proxyRequest.getHeader().keySet())
 				request.addHeader(key, proxyRequest.getHeader().get(key));
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.getMessage();
 		}
 	}
-	
-	private static void getHeader(ProxyResponse proxyResponse, HttpResponse httpResponse){
+
+	private static void getHeader(ProxyResponse proxyResponse, HttpResponse httpResponse) {
 		HashMap<String, String> headerResponse = new HashMap<>();
-		for(Header header : httpResponse.getAllHeaders())
-			headerResponse.put(header.getName(),header.getValue());
+		for (Header header : httpResponse.getAllHeaders())
+			headerResponse.put(header.getName(), header.getValue());
 
 		proxyResponse.setHeader(headerResponse);
 	}
@@ -86,7 +85,7 @@ public class ProxyHttp {
 			HttpGet request = new HttpGet(proxyRequest.getUrl());
 
 			setHeader(proxyRequest, request);
-			
+
 			httpResponse = httpClient.execute(request);
 
 			// Faz alguma coisa com a resposta
@@ -97,7 +96,7 @@ public class ProxyHttp {
 			getHeader(proxyResponse, httpResponse);
 
 			System.out.println(proxyResponse.toString());
-		
+
 		} catch (IOException ex) {
 			proxyResponse = new ProxyResponse(600, "text/plain", "fail request".getBytes());
 			proxyResponse.setIdMessage(proxyRequest.getIdMessage());
