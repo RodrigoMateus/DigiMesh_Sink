@@ -59,3 +59,4 @@ bin/.gitignore
 /localhost.txt
 /log.txt
 /ProxyRequest_LocalHost.txt
+/DeviceConfig.properties
