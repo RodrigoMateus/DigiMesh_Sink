@@ -1,7 +1,12 @@
 package com.maykot.mainApp;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.commons.lang3.SerializationUtils;
@@ -16,23 +21,33 @@ import com.maykot.maykottracker.radio.ProxyResponse;
 
 public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener {
 
-	CloseableHttpClient httpClient = HttpClients.createDefault();
-	ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-	String mqttClientId = null;
-	String mqttMessageId = null;
+	HashMap<String, TreatRequest> listTrataRequest = new HashMap<String, TreatRequest>();
 
 	@Override
 	public void explicitDataReceived(ExplicitXBeeMessage explicitXBeeMessage) {
-		ExecutorService executor = Executors.newFixedThreadPool(20);
-		executor.execute(new TreatRequest(explicitXBeeMessage));
+		TreatRequest treatRequest = null;
+
+		if (listTrataRequest.containsKey(explicitXBeeMessage.getDevice().get64BitAddress().toString())) {
+			treatRequest = listTrataRequest.get(explicitXBeeMessage.getDevice().get64BitAddress().toString());
+		} else {
+			treatRequest = new TreatRequest();
+			listTrataRequest.put(explicitXBeeMessage.getDevice().get64BitAddress().toString(), treatRequest);
+		}
+		ExecutorService executor = Executors.newFixedThreadPool(1);
+		treatRequest.process(explicitXBeeMessage);
+		executor.execute(treatRequest);
 		executor.shutdown();
 	}
 
 	class TreatRequest extends Thread {
 
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		String mqttClientId = null;
+		String mqttMessageId = null;
 		ExplicitXBeeMessage explicitXBeeMessage;
 
-		public TreatRequest(ExplicitXBeeMessage explicitXBeeMessage) {
+		public synchronized void process(ExplicitXBeeMessage explicitXBeeMessage) {
 			this.explicitXBeeMessage = explicitXBeeMessage;
 		}
 
@@ -52,16 +67,33 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 			case MainApp.ENDPOINT_HTTP_POST_DATA:
 
 				try {
+					System.out.println(explicitXBeeMessage.getProfileID());
 					byteArrayOutputStream.write(explicitXBeeMessage.getData());
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
+
 				break;
 
 			case MainApp.ENDPOINT_HTTP_POST_SEND:
 
 				byte[] tempByteArray = byteArrayOutputStream.toByteArray();
 				byteArrayOutputStream.reset();
+
+				String fileName = (new String(new SimpleDateFormat("yyyy-MM-dd_HHmmss_").format(new Date())))
+						+ "image.txt";
+
+				try {
+					FileOutputStream fileChannel = new FileOutputStream(fileName);
+					fileChannel.write(tempByteArray);
+					fileChannel.close();
+				} catch (FileNotFoundException e) {
+					System.out.println("ERRO FileChannel");
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				ProxyResponse response = processRequest(tempByteArray, mqttClientId);
 
@@ -83,6 +115,33 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 						new String(explicitXBeeMessage.getData()));
 				break;
 
+			case MainApp.ENDPOINT_IMG:
+
+				String fileName2 = (new String(new SimpleDateFormat("yyyy-MM-dd_HHmmss_").format(new Date())))
+						+ "image.png";
+
+				try {
+					byteArrayOutputStream.write(explicitXBeeMessage.getData());
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+				try {
+					FileOutputStream fileChannel = new FileOutputStream(fileName2);
+					fileChannel.write(byteArrayOutputStream.toByteArray());
+					fileChannel.close();
+				} catch (FileNotFoundException e) {
+					System.out.println("ERRO FileChannel");
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				byteArrayOutputStream.reset();
+
+				break;
+
 			default:
 				break;
 			}
@@ -101,12 +160,10 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 					} else if (proxyRequest.getVerb().contains("post")) {
 						response = ProxyHttp.postFile(proxyRequest);
 					} else {
-						response = new ProxyResponse(600, "application/json",
-								ErrorCode.e600.getBytes());
+						response = new ProxyResponse(600, "application/json", ErrorCode.e600.getBytes());
 					}
 				} catch (Exception e) {
-					response = new ProxyResponse(601, "application/json",
-							ErrorCode.e601.getBytes());
+					response = new ProxyResponse(601, "application/json", ErrorCode.e601.getBytes());
 				}
 			} catch (Exception e) {
 				response = new ProxyResponse(602, "application/json",
@@ -114,8 +171,7 @@ public class ExplicitDataReceiveListener implements IExplicitDataReceiveListener
 			}
 
 			if (response == null) {
-				response = new ProxyResponse(603, "application/json",
-						ErrorCode.e603.getBytes());
+				response = new ProxyResponse(603, "application/json", ErrorCode.e603.getBytes());
 
 			}
 			System.out.println("MQTT Message ID = " + mqttMessageId);

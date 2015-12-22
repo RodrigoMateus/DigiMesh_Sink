@@ -27,6 +27,7 @@ public class MainApp {
 
 	/* Endpoints, clusterID and profileID */
 	static final int ENDPOINT_TXT = 11;
+	static final int ENDPOINT_IMG = 21;
 	static final int ENDPOINT_HTTP_POST_INIT = 31;
 	static final int ENDPOINT_HTTP_POST_DATA = 32;
 	static final int ENDPOINT_HTTP_POST_SEND = 33;
