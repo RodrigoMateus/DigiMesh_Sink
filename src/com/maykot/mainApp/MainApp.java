@@ -5,12 +5,9 @@ package com.maykot.mainApp;
  *****************/
 
 import java.io.IOException;
-
 import com.digi.xbee.api.DigiMeshDevice;
 import com.digi.xbee.api.exceptions.XBeeException;
-import com.digi.xbee.api.listeners.IModemStatusReceiveListener;
 import com.digi.xbee.api.models.APIOutputMode;
-import com.digi.xbee.api.models.ModemStatusEvent;
 import com.digi.xbee.api.utils.DeviceConfig;
 import com.digi.xbee.api.utils.Statistic;
 
