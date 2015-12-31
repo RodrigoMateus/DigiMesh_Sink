@@ -23,7 +23,7 @@ public class TestHttp {
 		proxyRequest.setIdMessage("0");
 		proxyRequest.setHeader(header);
 		
-		ProxyResponse proxyResponse = ProxyHttp.getFile(proxyRequest);
+		//ProxyResponse proxyResponse = ProxyHttp.getFile(proxyRequest);
 		proxyRequest.toString();
 	}
 	
