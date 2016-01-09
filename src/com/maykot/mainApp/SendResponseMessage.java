@@ -8,8 +8,8 @@ import com.digi.xbee.api.DigiMeshDevice;
 import com.digi.xbee.api.exceptions.TimeoutException;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.models.XBee64BitAddress;
-import com.digi.xbee.api.utils.LogRecord;
-import com.digi.xbee.api.utils.Statistic;
+import com.maykot.utils.LogRecord;
+import com.maykot.utils.Statistic;
 
 public class SendResponseMessage {
 

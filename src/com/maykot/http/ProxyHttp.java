@@ -16,9 +16,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import com.digi.xbee.api.utils.LogRecord;
 import com.maykot.maykottracker.radio.ProxyRequest;
 import com.maykot.maykottracker.radio.ProxyResponse;
+import com.maykot.utils.LogRecord;
 
 public class ProxyHttp {
 
