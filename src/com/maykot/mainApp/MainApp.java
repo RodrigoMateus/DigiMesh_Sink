@@ -40,7 +40,7 @@ public class MainApp {
 		System.out.println(" +-----------------+\n");
 
 		try {
-			DeviceConfig deviceConfig = new DeviceConfig();
+			DeviceConfig deviceConfig = DeviceConfig.getInstance();
 
 			XTEND_PORT = deviceConfig.getXTendPort();
 			XTEND_BAUD_RATE = deviceConfig.getXTendBaudRate();
